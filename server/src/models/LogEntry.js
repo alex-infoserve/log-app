@@ -36,8 +36,7 @@ const logEntrySchema = new Schema(
     visitDate: {
       type: Date,
       required: true
-    },
-    updated_at: defaultRequiredDate
+    }
   },
   { timestamps: true }
 )
