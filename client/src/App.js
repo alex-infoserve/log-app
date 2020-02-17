@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import ReactMapGL, { Marker, Popup } from 'react-map-gl'
 
 import { listLogEntries } from './API'
+import LogEntryForm from './LogEntryForm'
 
 const App = () => {
   const [logEntries, setLogEntries] = useState([])
@@ -26,7 +27,6 @@ const App = () => {
      */
     ;(async () => {
       const logEntries = await listLogEntries()
-      console.log(logEntries)
       setLogEntries(logEntries)
     })()
   }, [])
@@ -47,35 +47,11 @@ const App = () => {
       onDblClick={showAddMarkerPopup}
     >
       {logEntries.map(entry => (
-        <>
-          <Marker
-            key={entry._id}
-            latitude={entry.latitude}
-            longitude={entry.longitude}
-
-            /* offsetLeft={-12}
-            offsetTop={-24} */
-          >
-            {/* <svg
-              className='marker'
-              style={{
-                //width: `calc(1vmin * ${viewport.zoom})`,
-                width: `${6 * viewport.zoom}px`,
-                height: `${6 * viewport.zoom}px`
-              }}
-              viewBox='0 0 24 24'
-              stroke-width='1.5'
-              fill='none'
-              stroke-linecap='round'
-              stroke-linejoin='round'
-            >
-              <path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'></path>
-              <circle cx='12' cy='10' r='3'></circle>
-            </svg> */}
+        <React.Fragment key={entry._id}>
+          <Marker latitude={entry.latitude} longitude={entry.longitude}>
             <div
               onClick={() =>
                 setShowPopup({
-                  //...showPopup,
                   [entry._id]: true
                 })
               }
@@ -123,7 +99,7 @@ const App = () => {
               </div>
             </Popup>
           ) : null}
-        </>
+        </React.Fragment>
       ))}
       {addEntryLocation ? (
         <>
@@ -166,7 +142,7 @@ const App = () => {
             anchor='top'
           >
             <div className='popup'>
-              <h3>Add your new log here</h3>
+              <LogEntryForm location={addEntryLocation} />
             </div>
           </Popup>
         </>
