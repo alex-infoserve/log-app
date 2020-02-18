@@ -17,19 +17,28 @@ const App = () => {
     zoom: 2
   })
 
+  const getEntries = async () => {
+    const logEntries = await listLogEntries()
+    setLogEntries(logEntries)
+  }
+
   useEffect(() => {
-    /**
+    getEntries()
+  }, [])
+
+  /**useEffect(() => {
+   
      * IIFE:
      * An Immediately-invoked Function Expression is a way to
      * execute functions immediately, as soon as they are created.
      * IIFEs are very useful because they don't pollute the global object,
      * and they are a simple way to isolate variables declarations
-     */
+    
     ;(async () => {
       const logEntries = await listLogEntries()
       setLogEntries(logEntries)
     })()
-  }, [])
+  }, []) */
 
   const showAddMarkerPopup = event => {
     const [longitude, latitude] = event.lngLat
@@ -91,6 +100,9 @@ const App = () => {
               anchor='top'
             >
               <div className='popup'>
+                {entry.image ? (
+                  <img src={entry.image} alt={entry.title} />
+                ) : null}
                 <h3>{entry.title}</h3>
                 <p>{entry.comments}</p>
                 <small>
@@ -142,7 +154,13 @@ const App = () => {
             anchor='top'
           >
             <div className='popup'>
-              <LogEntryForm location={addEntryLocation} />
+              <LogEntryForm
+                onClose={() => {
+                  setAddEntryLocation(null)
+                  getEntries()
+                }}
+                location={addEntryLocation}
+              />
             </div>
           </Popup>
         </>
